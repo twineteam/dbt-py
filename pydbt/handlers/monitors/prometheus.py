@@ -8,6 +8,7 @@ from prometheus_client import (
     Summary,
     push_to_gateway,
 )
+from ...config import PUSHGATEWAY_TIMEOUT
 
 
 class PrometheusMonitor(BaseMonitor):
@@ -101,5 +102,8 @@ class PrometheusMonitor(BaseMonitor):
             self.report_rows_moved(msg.reporting.rows, tags=msg.context)
 
         return push_to_gateway(
-            f"{self.host}:{self.port}", "dbt", self.registry, timeout=None
+            f"{self.host}:{self.port}",
+            "dbt",
+            self.registry,
+            timeout=PUSHGATEWAY_TIMEOUT,
         )
