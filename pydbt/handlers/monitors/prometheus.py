@@ -100,4 +100,6 @@ class PrometheusMonitor(BaseMonitor):
         if msg.reporting and msg.reporting.rows:
             self.report_rows_moved(msg.reporting.rows, tags=msg.context)
 
-        return push_to_gateway(f"{self.host}:{self.port}", "dbt", self.registry)
+        return push_to_gateway(
+            f"{self.host}:{self.port}", "dbt", self.registry, timeout=None
+        )
