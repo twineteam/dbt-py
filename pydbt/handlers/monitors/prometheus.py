@@ -1,4 +1,4 @@
-from ...config import ENV
+from ...config import ENV, PUSHGATEWAY_TIMEOUT
 from ...types import Message
 from .base import BaseMonitor, Tags
 from prometheus_client import (
@@ -8,7 +8,6 @@ from prometheus_client import (
     Summary,
     push_to_gateway,
 )
-from ...config import PUSHGATEWAY_TIMEOUT
 
 
 class PrometheusMonitor(BaseMonitor):
