@@ -104,5 +104,5 @@ class PrometheusMonitor(BaseMonitor):
             f"{self.host}:{self.port}",
             "dbt",
             self.registry,
-            timeout=PUSHGATEWAY_TIMEOUT,
+            timeout=int(PUSHGATEWAY_TIMEOUT),
         )
