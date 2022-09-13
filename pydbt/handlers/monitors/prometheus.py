@@ -109,4 +109,4 @@ class PrometheusMonitor(BaseMonitor):
                 timeout=int(PUSHGATEWAY_TIMEOUT),
             )
         except Exception as e:
-            log.error(f"Failed to push metrics to prometheus: {e}")
+            log.warn(f"Failed to push metrics to prometheus: {e}")
