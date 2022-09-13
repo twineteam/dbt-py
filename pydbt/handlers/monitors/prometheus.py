@@ -1,3 +1,4 @@
+from socket import timeout
 from ...config import ENV, PUSHGATEWAY_TIMEOUT
 from ...types import Message
 from .base import BaseMonitor, Tags
@@ -100,9 +101,12 @@ class PrometheusMonitor(BaseMonitor):
         if msg.reporting and msg.reporting.rows:
             self.report_rows_moved(msg.reporting.rows, tags=msg.context)
 
-        return push_to_gateway(
-            f"{self.host}:{self.port}",
-            "dbt",
-            self.registry,
-            timeout=int(PUSHGATEWAY_TIMEOUT),
-        )
+        try:
+            return push_to_gateway(
+                f"{self.host}:{self.port}",
+                "dbt",
+                self.registry,
+                timeout=int(PUSHGATEWAY_TIMEOUT),
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to push metrics to prometheus: {e}")
