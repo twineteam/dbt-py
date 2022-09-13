@@ -1,4 +1,4 @@
-from socket import timeout
+from ...logger import GLOBAL_LOGGER as log
 from ...config import ENV, PUSHGATEWAY_TIMEOUT
 from ...types import Message
 from .base import BaseMonitor, Tags
@@ -109,4 +109,4 @@ class PrometheusMonitor(BaseMonitor):
                 timeout=int(PUSHGATEWAY_TIMEOUT),
             )
         except Exception as e:
-            self.logger.error(f"Failed to push metrics to prometheus: {e}")
+            log.error(f"Failed to push metrics to prometheus: {e}")
