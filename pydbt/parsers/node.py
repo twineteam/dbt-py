@@ -87,7 +87,12 @@ def _parse_node_config(config: NodeConfig) -> T.Dict[str, str]:
     )
 
 
+
 def parse_node(result: NodeResult) -> T.Dict[str, str]:
+    """
+    Parses a node result into a dict of values that can be used for
+    logging purposes
+    """
     node = result.node
     config = {}
 
