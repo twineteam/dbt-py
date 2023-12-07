@@ -2,7 +2,7 @@ import os
 import json
 from mock import MagicMock
 from dbt.contracts.results import RunResult, SourceFreshnessResult
-from dbt.contracts.graph.compiled import CompiledNode, CompiledTestNode
+# from dbt.contracts.graph.nodes import , CompiledTestNode
 
 
 def _load_file(fn):
