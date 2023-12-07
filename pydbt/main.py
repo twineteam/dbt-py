@@ -25,7 +25,7 @@ from .logger import GLOBAL_LOGGER as log, LogManager, AppendTags
 # end hack to silence TCPServer logs
 
 
-def run(command: T.List[str], tags: T.Dict[str,str]):
+def run(command: T.List[str], tags: T.Dict[str, str]):
     start = time.time()
     try:
         # Initialize stats and alerting
@@ -35,7 +35,7 @@ def run(command: T.List[str], tags: T.Dict[str,str]):
         @stats.timed("dbt.command.time", sample_rate=0.5)
         def run_command(cliArgs: T.List[str]) -> dbtRunnerResult:
             runner = dbtRunner()
-            
+
             return runner.invoke(cliArgs)
 
         res: RunExecutionResult

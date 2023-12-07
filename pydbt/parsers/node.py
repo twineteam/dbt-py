@@ -18,7 +18,8 @@ from dbt.contracts.graph.model_config import (
 
 from ..logger import GLOBAL_LOGGER as log
 
-def _parse_node(node: ParsedNode) -> T.Dict[str,str]:
+
+def _parse_node(node: ParsedNode) -> T.Dict[str, str]:
     parsed = dict(
         database=node.database.lower() if node.database is not None else "",
         schema=node.schema.lower(),
@@ -35,14 +36,14 @@ def _parse_node(node: ParsedNode) -> T.Dict[str,str]:
     return parsed
 
 
-def _parse_parsed_node(node: ParsedNode) -> T.Dict[str,str]:
+def _parse_parsed_node(node: ParsedNode) -> T.Dict[str, str]:
     parsed = _parse_node(node)
     parsed["filename"] = node.original_file_path
     parsed["abs_path"] = f"{node.build_path}/{node.original_file_path}"
     return parsed
 
 
-def _parse_parsed_source_node(node: SourceDefinition) -> T.Dict[str,str]:
+def _parse_parsed_source_node(node: SourceDefinition) -> T.Dict[str, str]:
     parsed = dict(
         database=node.database.lower() if node.database is not None else "",
         schema=node.schema.lower(),
@@ -57,11 +58,11 @@ def _parse_parsed_source_node(node: SourceDefinition) -> T.Dict[str,str]:
 
 
 # TO DO, not important
-def _parse_seed_node_config(config: SeedConfig) -> T.Dict[str,str]:
+def _parse_seed_node_config(config: SeedConfig) -> T.Dict[str, str]:
     return {}
 
 
-def _parse_test_node_config(config: TestConfig) -> T.Dict[str,str]:
+def _parse_test_node_config(config: TestConfig) -> T.Dict[str, str]:
     return dict(
         materialized=config.materialized.lower(),
     )
@@ -69,7 +70,7 @@ def _parse_test_node_config(config: TestConfig) -> T.Dict[str,str]:
 
 def _parse_snapshot_node_config(
     config: SnapshotConfig,
-) -> T.Dict[str,str]:
+) -> T.Dict[str, str]:
     node_config = _parse_node_config(config)
     snapshot_config = dict(
         strategy=config.strategy.lower() if config.strategy is not None else "",
@@ -80,13 +81,13 @@ def _parse_snapshot_node_config(
     return {**node_config, **snapshot_config}
 
 
-def _parse_node_config(config: NodeConfig) -> T.Dict[str,str]:
+def _parse_node_config(config: NodeConfig) -> T.Dict[str, str]:
     return dict(
         materialized=config.materialized.lower(),
     )
 
 
-def parse_node(result: NodeResult) -> T.Dict[str,str]:
+def parse_node(result: NodeResult) -> T.Dict[str, str]:
     node = result.node
     config = {}
 
