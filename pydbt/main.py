@@ -1,7 +1,7 @@
 import sys
 import time
-import http
-import dbt.main
+# import http
+from dbt.cli.main import dbtRunner, dbtRunnerResult
 import sentry_sdk
 import typing as T
 from . import dbt_version
@@ -13,17 +13,19 @@ from dbt.contracts.results import RunExecutionResult
 from .logger import GLOBAL_LOGGER as log, LogManager, AppendTags
 
 
-# Hack to silence TCPServer logs
-class QuietHandler(http.server.SimpleHTTPRequestHandler):
-    def log_message(self, format, *args):
-        pass
+# I'm leaving in the commented code below until I can figure
+# out why we definitely don't need it.
 
+# # Hack to silence TCPServer logs
+# class QuietHandler(http.server.SimpleHTTPRequestHandler):
+#     def log_message(self, format, *args):
+#         pass
 
-dbt.main.dbt.task.serve.SimpleHTTPRequestHandler = QuietHandler
+# dbt.main.dbt.task.serve.SimpleHTTPRequestHandler = QuietHandler
 # end hack to silence TCPServer logs
 
 
-def run(command: T.List, tags: T.Dict):
+def run(command: T.List[str], tags: T.Dict[str, str]):
     start = time.time()
     try:
         # Initialize stats and alerting
@@ -31,11 +33,14 @@ def run(command: T.List, tags: T.Dict):
         stats = monitor.init(common_tags=tags)
 
         @stats.timed("dbt.command.time", sample_rate=0.5)
-        def run_command(cmd: T.List):
-            return dbt.main.handle_and_check(cmd)
+        def run_command(cliArgs: T.List[str]) -> dbtRunnerResult:
+            runner = dbtRunner()
+
+            return runner.invoke(cliArgs)
 
         res: RunExecutionResult
         res, success = run_command(command)
+        res: RunExecutionResult
         for idx, result in enumerate(res.results):
             msg: Message = Formatter.format(result)
             stats.report(msg)
@@ -58,7 +63,7 @@ def run(command: T.List, tags: T.Dict):
         stats.timing("dbt.command.time", time.time() - start)
 
 
-def main(args: T.List):
+def main(args: T.List[str]):
     command = args[1:]
     tags = {
         "app": "dbt",
