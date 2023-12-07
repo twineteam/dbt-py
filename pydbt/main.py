@@ -53,7 +53,6 @@ def run(command: T.List[str], tags: T.Dict[str, str]):
                     context=msg.context,
                 )
 
-        print("c")
         return sys.exit(0 if success else 1)
 
     except Exception as err:
