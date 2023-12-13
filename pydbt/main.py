@@ -26,7 +26,6 @@ from .logger import GLOBAL_LOGGER as log, LogManager, AppendTags
 
 
 def run(command: T.List[str], tags: T.Dict[str, str]):
-    print("I'm in!")
     start = time.time()
     try:
         # Initialize stats and alerting
@@ -59,9 +58,8 @@ def run(command: T.List[str], tags: T.Dict[str, str]):
         return sys.exit(0 if success else 1)
 
     except Exception as err:
-        log.error(err)
-        print("The err is below")
         print(err)
+        log.error(err)
         sentry_sdk.capture_exception(err)
         return sys.exit(1)
     finally:
