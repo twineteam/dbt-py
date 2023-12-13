@@ -38,24 +38,27 @@ def run(command: T.List[str], tags: T.Dict[str, str]):
 
             return runner.invoke(cliArgs)
 
-        res: RunExecutionResult
-        res, success = run_command(command)
-        res: RunExecutionResult
-        for idx, result in enumerate(res.results):
-            msg: Message = Formatter.format(result)
-            stats.report(msg)
-            alerting.alert(msg)
-            with AppendTags({**msg.context, **tags}):
-                log.log(
-                    msg.level,
-                    msg.message,
-                    trace=msg.error,
-                    context=msg.context,
-                )
+        command_output = run_command(command)
+        
+        res = command_output.result
+        success = command_output.success
+        if (isinstance(res, RunExecutionResult)):
+            for _, result in enumerate(res.results):
+                msg: Message = Formatter.format(result)
+                stats.report(msg)
+                alerting.alert(msg)
+                with AppendTags({**msg.context, **tags}):
+                    log.log(
+                        msg.level,
+                        msg.message,
+                        trace=msg.error,
+                        context=msg.context,
+                    )
 
         return sys.exit(0 if success else 1)
 
     except Exception as err:
+        print(err)
         log.error(err)
         sentry_sdk.capture_exception(err)
         return sys.exit(1)
